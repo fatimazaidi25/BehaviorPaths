@@ -3756,6 +3756,7 @@ async function downloadFidelitySheet(d) {
 function RenderOutput({ d, go, dl, mode, setMode }) {
   const [downloading, setDownloading] = React.useState(false);
   const [dlError, setDlError] = React.useState(null);
+  const [showFeedback, setShowFeedback] = React.useState(true);
 
   const handleDownload = async () => {
     setDownloading(true);
@@ -3772,6 +3773,39 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
 
   return (
     <div>
+      {/* Feedback modal */}
+      {showFeedback && (
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+          <div style={{background:B.warmWhite,borderRadius:16,padding:"28px 24px",maxWidth:360,width:"100%",boxShadow:"0 8px 40px rgba(0,0,0,0.22)",fontFamily:"'DM Sans',sans-serif",textAlign:"center"}}>
+            <div style={{fontSize:36,marginBottom:10}}>🌱</div>
+            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:24,fontWeight:700,color:B.forest,marginBottom:8,lineHeight:1.3}}>
+              Your plan is ready!
+            </h3>
+            <p style={{fontSize:13.5,color:B.teal,lineHeight:1.7,marginBottom:6}}>
+              We'd love to hear what you think about BehaviorPath.
+            </p>
+            <p style={{fontSize:12.5,color:B.muted,lineHeight:1.6,marginBottom:22}}>
+              Your feedback helps us improve tools for practitioners like you. It only takes a minute.
+            </p>
+            <a
+              href="https://forms.gle/SBNdYbworX9deYn19"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setShowFeedback(false)}
+              style={{display:"block",width:"100%",boxSizing:"border-box",padding:"13px",borderRadius:10,background:B.forest,color:B.white,fontWeight:700,fontSize:14,textDecoration:"none",marginBottom:10,letterSpacing:0.2}}
+            >
+              Share Feedback →
+            </a>
+            <button
+              onClick={() => setShowFeedback(false)}
+              style={{background:"none",border:"none",cursor:"pointer",fontSize:12.5,color:B.muted,padding:"4px 8px",fontFamily:"'DM Sans',sans-serif"}}
+            >
+              No thanks, skip to my plan
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{textAlign:"center",marginBottom:26}}>
         <div style={{fontSize:50}}>🪷</div>
         <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:32,fontWeight:600,color:B.forest,marginBottom:6}}>Your plan is ready.</h2>
