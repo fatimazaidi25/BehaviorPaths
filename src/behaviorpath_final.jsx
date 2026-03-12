@@ -3411,8 +3411,7 @@ async function downloadBaselineSheet(d) {
         cell(para([run("Date",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:dateW}),
         cell(para([run("Day",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:dayW}),
         cell(para([run("Setting",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:settingW}),
-        cell(para([run("Rating
-(1–4)",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:ratingW}),
+        cell(para([run("Rating (1–4)",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:ratingW}),
         cell(para([run("Behavioral description — what exactly happened?",{bold:true,size:15,color:C.teal})]),{fill:C.light,width:descrW}),
         cell(para([run("Antecedent / context",{bold:true,size:15,color:C.teal})]),{fill:C.light,width:antW}),
       ]}),
