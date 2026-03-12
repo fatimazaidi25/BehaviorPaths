@@ -3767,10 +3767,6 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
         </div>
       </div>
 
-      <div style={{marginTop:10,padding:"10px 14px",background:B.cream,borderRadius:9,border:`1px solid ${B.border}`,fontSize:11,color:B.teal,fontFamily:"'DM Sans',sans-serif",lineHeight:1.7,textAlign:"center"}}>
-        <strong>Where Behavior Plans Begin</strong><br/>
-        <span style={{fontSize:10,color:B.muted}}>BehaviorPath · BASIL Behavior Lab · basilbehaviorlab.org</span>
-      </div>
     </div>
   );
 }
