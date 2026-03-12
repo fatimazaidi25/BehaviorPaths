@@ -1,11 +1,8 @@
-[[redirects]]
-  from = "/behaviorpath"
-  to = "https://behaviorpath.netlify.app"
-  status = 301
-  force = true
+[build]
+  command = "npm install && node build.js"
+  publish = "dist"
 
 [[redirects]]
-  from = "/behaviorpath/*"
-  to = "https://behaviorpath.netlify.app/:splat"
-  status = 301
-  force = true
+  from = "/*"
+  to = "/index.html"
+  status = 200

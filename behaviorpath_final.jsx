@@ -26,6 +26,42 @@ const B = {
 
 
 // ────────────────────────────────────────────────────────────
+// ── data sheet PDF URLs (hosted in public GitHub repo)
+// ────────────────────────────────────────────────────────────
+
+const DATA_SHEETS = {
+  abc:      { label: "ABC Data Sheet",                  file: "BehaviorPath_ABC_Data_sheet.pdf" },
+  ea:       { label: "Environmental Analysis (EA)",     file: "BehaviorPath_EA_Data_Sheet.pdf" },
+  baseline: { label: "Baseline Data Sheet",             file: "BehaviorPath_Baseline_Data_Sheet.pdf" },
+  fidelity: { label: "BIP Fidelity Checklist",          file: "BehaviorPath_Fidelity_Checklist.pdf" },
+};
+
+// Base URL — PDFs live in the /data-sheets folder of the public GitHub repo
+const DATA_SHEET_BASE = "https://raw.githubusercontent.com/fatimazaidi25/behaviorpath-tools/main/data-sheets/";
+
+const DataSheetLink = ({ sheetKey, label, style: extStyle }) => {
+  const sheet = DATA_SHEETS[sheetKey];
+  const url = DATA_SHEET_BASE + sheet.file;
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 5,
+        fontSize: 12, fontWeight: 600, color: B.teal,
+        fontFamily: "'DM Sans',sans-serif",
+        textDecoration: "none", borderBottom: `1px dashed ${B.sage}`,
+        ...extStyle,
+      }}
+    >
+      📄 {label || sheet.label}
+    </a>
+  );
+};
+
+
+// ────────────────────────────────────────────────────────────
 // ── constants
 // ────────────────────────────────────────────────────────────
 
@@ -1086,6 +1122,47 @@ function WelcomeScreen({ go, mode, setMode }) {
 
       <Box type="info">This plan follows the structure of the <strong>SIRAS IEP Form 6G</strong> — Behavior Intervention Plan. Your answers are saved as you walk the path.</Box>
 
+      {/* Data Collection Tools */}
+      <div style={{ background: B.cream, border: `1px solid ${B.border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 20 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: B.teal, fontFamily: "'DM Sans',sans-serif", marginBottom: 10 }}>
+          📋 Data Collection Tools
+        </div>
+        <p style={{ fontSize: 12.5, color: B.muted, fontFamily: "'DM Sans',sans-serif", marginBottom: 12, lineHeight: 1.6 }}>
+          Download these companion sheets before you begin. You'll need baseline data, ABC observations, and an environmental analysis to complete the plan.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[
+            { key: "baseline", desc: "Sections 4 & 13 — frequency / duration data" },
+            { key: "abc",      desc: "Section 5 — antecedent, behavior, consequence" },
+            { key: "ea",       desc: "Sections 6–7 — environmental analysis" },
+            { key: "fidelity", desc: "Section 11 — BIP implementation fidelity" },
+          ].map(({ key, desc }) => (
+            <a
+              key={key}
+              href={DATA_SHEET_BASE + DATA_SHEETS[key].file}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                padding: "10px 14px", borderRadius: 9,
+                background: B.white, border: `1.5px solid ${B.border}`,
+                textDecoration: "none", transition: "border-color 0.15s",
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: B.forest, fontFamily: "'DM Sans',sans-serif" }}>
+                  {DATA_SHEETS[key].label}
+                </div>
+                <div style={{ fontSize: 11, color: B.muted, fontFamily: "'DM Sans',sans-serif", marginTop: 1 }}>{desc}</div>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 600, color: B.teal, fontFamily: "'DM Sans',sans-serif", background: B.mint, borderRadius: 6, padding: "3px 9px" }}>
+                PDF ↓
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
       <div style={{ textAlign: "center" }}>
         <button
           onClick={() => go(1)}
@@ -1339,6 +1416,7 @@ function renderBaseline({ d, updB, setSame, sec, hasTwoBehaviors, activeBkeys, N
       <div style={{marginBottom:14,color:B.forest}}><BarChart2 size={38} strokeWidth={1.5}/></div>
       <H>Frequency or intensity or duration of behavior</H>
       <P>Your baseline "before" snapshot. Use specific numbers — avoid "often" or "throughout the day."</P>
+      <Box type="info">📋 <strong>Need a data sheet?</strong> Use the <DataSheetLink sheetKey="baseline" /> to record frequency or duration data across 5–10 school days before completing this section.</Box>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
       <Nav ok={activeBkeys.every(bk=>[(d[bk].freqMin||d[bk].freqMax),d[bk].intensity,(d[bk].durMin||d[bk].durMax)].filter(Boolean).length>=2)}/>
@@ -1381,7 +1459,7 @@ function renderAntecedents({ d, updB, togB, setSame, sec, hasTwoBehaviors, activ
       <div style={{marginBottom:14,color:B.forest}}><Search size={38} strokeWidth={1.5}/></div>
       <H>What are the predictors for the behavior?</H>
       <P>Situations in which the behavior is likely to occur: people, time, place, subject, activity.</P>
-      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — antecedent numbers on the sheet correspond to the predictors below.</Box>
+      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — antecedent numbers on the sheet correspond to the predictors below. <DataSheetLink sheetKey="abc" label="Download ABC Data Sheet" style={{ marginLeft: 6 }} /></Box>
       <p style={{fontSize:15,fontStyle:"italic",fontFamily:"'Cormorant Garamond',serif",color:B.teal,marginBottom:14}}>The behavior is most likely to occur when…</p>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
@@ -1473,7 +1551,7 @@ function renderEnvironment({ d, updB, setSame, setD, sec, hasTwoBehaviors, activ
       <div style={{marginBottom:14,color:B.forest}}><Home size={38} strokeWidth={1.5}/></div>
       <H>What supports the student using the problem behavior?</H>
       <P>Use your EA Data Sheet — select items marked Δ or − for each behavior. Max 2 per behavior.</P>
-      <Box type="info">📋 <strong>Reference your EA Data Sheet</strong> — items marked Δ (needs change) or − (missing) are your targets.</Box>
+      <Box type="info">📋 <strong>Reference your EA Data Sheet</strong> — items marked Δ (needs change) or − (missing) are your targets. <DataSheetLink sheetKey="ea" label="Download EA Data Sheet" style={{ marginLeft: 6 }} /></Box>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
       <Nav ok={activeBkeys.every(bk=>(d[bk].envSel||[]).length>=1)}/>
