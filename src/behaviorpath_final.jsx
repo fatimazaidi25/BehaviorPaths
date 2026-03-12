@@ -1116,7 +1116,7 @@ function WelcomeScreen({ go, mode, setMode }) {
 
       <div style={{ background: B.mint + "66", borderRadius: 12, padding: "16px 20px", marginBottom: 20, textAlign: "center" }}>
         <p style={{ fontSize: 14, color: B.teal, lineHeight: 1.8, fontFamily: "'DM Sans',sans-serif", margin: 0 }}>
-          A guided, step-by-step path to building individualized, evidence-based Behavior Intervention Plans — aligned to <strong>SIRAS IEP Form 6G</strong>.
+          A guided, step-by-step path to building individualized, evidence-based Behavior Intervention Plans — aligned to <strong>SIRAS IEP Form 6G</strong>. Save your answers with the backup button and pick up where you left off with restore.
         </p>
       </div>
 
