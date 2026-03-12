@@ -1,0 +1,2 @@
+/behaviorpath https://behaviorpath.netlify.app 301!
+/behaviorpath/* https://behaviorpath.netlify.app/:splat 301!

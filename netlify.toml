@@ -1,0 +1,11 @@
+[[redirects]]
+  from = "/behaviorpath"
+  to = "https://behaviorpath.netlify.app"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/behaviorpath/*"
+  to = "https://behaviorpath.netlify.app/:splat"
+  status = 301
+  force = true
