@@ -1116,13 +1116,9 @@ function WelcomeScreen({ go, mode, setMode }) {
 
       <div style={{ background: B.mint + "66", borderRadius: 12, padding: "16px 20px", marginBottom: 20, textAlign: "center" }}>
         <p style={{ fontSize: 14, color: B.teal, lineHeight: 1.8, fontFamily: "'DM Sans',sans-serif", margin: 0 }}>
-          A guided, step-by-step path to building individualized, evidence-based Behavior Intervention Plans — one question at a time.
+          A guided, step-by-step path to building individualized, evidence-based Behavior Intervention Plans — aligned to <strong>SIRAS IEP Form 6G</strong>. Your answers are saved as you walk the path.
         </p>
       </div>
-
-      <Box type="info">This plan follows the structure of the <strong>SIRAS IEP Form 6G</strong> — Behavior Intervention Plan. Your answers are saved as you walk the path.</Box>
-
-      <Box type="peach">🔒 <strong>Your data never leaves your device.</strong> BehaviorPath does not store, transmit, or collect any student information. Everything is saved locally in your browser only.</Box>
 
       {/* Data Collection Tools */}
       <div style={{ background: B.cream, border: `1px solid ${B.border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 20 }}>
@@ -1172,6 +1168,11 @@ function WelcomeScreen({ go, mode, setMode }) {
         >
           Begin the Path →
         </button>
+      </div>
+
+      <div style={{ marginTop: 24, textAlign: "center", fontSize: 11, color: B.muted, fontFamily: "'DM Sans',sans-serif", lineHeight: 1.7 }}>
+        <div style={{ marginBottom: 4 }}>BehaviorPath · BASIL Behavior Lab · basilbehaviorlab.org</div>
+        <div>🔒 Your data never leaves your device. No student information is stored or transmitted.</div>
       </div>
     </div>
   );
