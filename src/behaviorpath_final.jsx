@@ -1122,6 +1122,8 @@ function WelcomeScreen({ go, mode, setMode }) {
 
       <Box type="info">This plan follows the structure of the <strong>SIRAS IEP Form 6G</strong> — Behavior Intervention Plan. Your answers are saved as you walk the path.</Box>
 
+      <Box type="peach">🔒 <strong>Your data never leaves your device.</strong> BehaviorPath does not store, transmit, or collect any student information. Everything is saved locally in your browser only.</Box>
+
       {/* Data Collection Tools */}
       <div style={{ background: B.cream, border: `1px solid ${B.border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 20 }}>
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: B.teal, fontFamily: "'DM Sans',sans-serif", marginBottom: 10 }}>
@@ -1133,7 +1135,7 @@ function WelcomeScreen({ go, mode, setMode }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {[
             { key: "baseline", desc: "Sections 4 & 13 — frequency / duration data" },
-            { key: "abc",      desc: "Section 5 — antecedent, behavior, consequence" },
+            { key: "abc",      desc: "Sections 5 & 8 — antecedents, consequences, and function" },
             { key: "ea",       desc: "Sections 6–7 — environmental analysis" },
             { key: "fidelity", desc: "Section 11 — BIP implementation fidelity" },
           ].map(({ key, desc }) => (
@@ -1771,7 +1773,7 @@ function renderFunction({ d, togB, updB, setSame, sec, hasTwoBehaviors, activeBk
       <div style={{marginBottom:14,color:B.forest}}><Brain size={38} strokeWidth={1.5}/></div>
       <H>Function of behavior</H>
       <P>The function is what the student gets or avoids. Use your ABC data to identify the most likely function below.</P>
-      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — use your most common A numbers and C codes in the calculator below.</Box>
+      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — use your most common A numbers and C codes in the calculator below. <DataSheetLink sheetKey="abc" label="Download ABC Data Sheet" style={{ marginLeft: 6 }} /></Box>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
       <Nav ok={activeBkeys.every(bk=>(d[bk].fns||[]).length>0&&(d[bk].fnFrames||[]).length>0)}/>
@@ -3784,6 +3786,7 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
     setDlError(null);
     try {
       await downloadBIPDocx(d);
+      if(window.trackEvent) window.trackEvent("bip_downloaded", { student_level: d.level });
     } catch(e) {
       console.error(e);
       setDlError("Download failed — try again or use the text copy below.");
@@ -3827,13 +3830,7 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
       <div style={{marginTop:16,padding:"14px 16px",background:B.cream,borderRadius:11,border:`1px solid ${B.border}`}}>
         <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:12,color:B.forest,marginBottom:10}}>📋 Data Sheets</div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
-          <button onClick={()=>downloadBaselineSheet(d)}
-            style={{width:"100%",padding:"11px 14px",borderRadius:9,border:`1.5px solid ${B.teal}`,cursor:"pointer",
-              background:"#fff",color:B.teal,fontWeight:600,fontSize:12.5,fontFamily:"'DM Sans',sans-serif",
-              display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .15s"}}>
-            📊 Download Baseline Frequency & Duration Sheet (.docx)
-          </button>
-          <button onClick={()=>downloadFidelitySheet(d)}
+          <button onClick={()=>{ downloadFidelitySheet(d); if(window.trackEvent) window.trackEvent("fidelity_checklist_downloaded", { student_level: d.level }); }}
             style={{width:"100%",padding:"11px 14px",borderRadius:9,border:`1.5px solid ${B.forest}`,cursor:"pointer",
               background:"#fff",color:B.forest,fontWeight:600,fontSize:12.5,fontFamily:"'DM Sans',sans-serif",
               display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .15s"}}>
@@ -4027,7 +4024,7 @@ function BehaviorPath() {
     window.scrollTo({top:0,behavior:"instant"});
     scrollRef.current?.scrollTo({top:0,behavior:"instant"});
   }, 10);
-  const go   = dir => { setAnim(false); setTimeout(()=>{setSi(i=>Math.max(0,Math.min(STOPS.length-1,i+dir)));setAnim(true);scrollTop();},140); };
+  const go   = dir => { setAnim(false); setTimeout(()=>{setSi(i=>{ const next=Math.max(0,Math.min(STOPS.length-1,i+dir)); if(window.trackEvent) window.trackEvent("section_view",{section_id:STOPS[next].id,section_label:STOPS[next].label}); return next; });setAnim(true);scrollTop();},140); };
   const jump = i   => { setAnim(false); setTimeout(()=>{setSi(i);setAnim(true);scrollTop();},100); };
   const dl   = ()  => { const a=document.createElement("a"); a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(buildOutput(d)); a.download=`BehaviorPath_BIP_${d.name||"Student"}.txt`; a.click(); };
 
