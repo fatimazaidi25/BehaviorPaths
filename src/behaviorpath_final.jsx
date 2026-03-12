@@ -3749,11 +3749,11 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
       <div style={{marginTop:16,padding:"14px 16px",background:B.cream,borderRadius:11,border:`1px solid ${B.border}`}}>
         <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:12,color:B.forest,marginBottom:10}}>📋 Data Sheets</div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
-          <button onClick={()=>downloadBaselineSheet(d)}
-            style={{width:"100%",padding:"11px 14px",borderRadius:9,border:`1.5px solid ${B.teal}`,cursor:"pointer",
-              background:"#fff",color:B.teal,fontWeight:600,fontSize:12.5,fontFamily:"'DM Sans',sans-serif",
-              display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .15s"}}>
-            📊 Download Baseline Frequency & Duration Sheet (.docx)
+          <button disabled
+            style={{width:"100%",padding:"11px 14px",borderRadius:9,border:`1.5px dashed ${B.sage}`,cursor:"not-allowed",
+              background:B.cream,color:B.sage,fontWeight:600,fontSize:12.5,fontFamily:"'DM Sans',sans-serif",
+              display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:0.85}}>
+            🗂️ Data Sheet Maker <span style={{fontSize:10,fontWeight:500,background:B.mint,color:B.teal,borderRadius:100,padding:"2px 8px",marginLeft:4}}>Coming Soon</span>
           </button>
           <button onClick={()=>downloadFidelitySheet(d)}
             style={{width:"100%",padding:"11px 14px",borderRadius:9,border:`1.5px solid ${B.forest}`,cursor:"pointer",
@@ -3769,7 +3769,7 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
 
       <div style={{marginTop:10,padding:"10px 14px",background:B.cream,borderRadius:9,border:`1px solid ${B.border}`,fontSize:11,color:B.teal,fontFamily:"'DM Sans',sans-serif",lineHeight:1.7,textAlign:"center"}}>
         <strong>Where Behavior Plans Begin</strong><br/>
-        <span style={{fontSize:10,color:B.muted}}>BehaviorPath · BASIL Behavior Lab · <a href="https://basilbehaviorlab.org" target="_blank" rel="noopener noreferrer" style={{color:B.teal,textDecoration:"none"}}>basilbehaviorlab.org</a></span>
+        <span style={{fontSize:10,color:B.muted}}>BehaviorPath · BASIL Behavior Lab · basilbehaviorlab.org</span>
       </div>
     </div>
   );
@@ -4038,7 +4038,7 @@ function BehaviorPath() {
               {screen()}
             </div>
             <div style={{textAlign:"center",marginTop:28,fontSize:10.5,color:B.muted,fontFamily:"'DM Sans',sans-serif",letterSpacing:0.3}}>
-              BASIL Behavior Lab · basilbehaviorlab.com
+              BASIL Behavior Lab · <a href="https://basilbehaviorlab.org" target="_blank" rel="noopener noreferrer" style={{color:B.muted,textDecoration:"underline",textDecorationColor:"rgba(0,0,0,0.2)"}}>basilbehaviorlab.org</a>
             </div>
           </div>
         </div>
