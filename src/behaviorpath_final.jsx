@@ -819,7 +819,7 @@ function buildOutput(d) {
   // ── SECTION 3 ────────────────────────────────────────────
   lines.push("");
   lines.push(div);
-  lines.push("SECTION 3 — BIP Level / Stage of Intervention");
+  lines.push("SECTION 3 — Need for a Behavior Intervention Plan");
   lines.push(line);
   const levelLabels = { "early stage": "Early Stage Intervention", "moderate": "Moderate", "serious": "Serious", "extreme": "Extreme" };
   lines.push(q("BIP Level:"));
@@ -3333,8 +3333,7 @@ async function downloadBaselineSheet(d) {
         cell(para([run("Date",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:dateW}),
         cell(para([run("Day",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:dayW}),
         cell(para([run("Setting",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:settingW}),
-        cell(para([run("Rating
-(1–4)",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:ratingW}),
+        cell(para([run("Rating (1–4)",{bold:true,size:15,color:C.teal})],{align:AlignmentType.CENTER}),{fill:C.light,width:ratingW}),
         cell(para([run("Behavioral description — what exactly happened?",{bold:true,size:15,color:C.teal})]),{fill:C.light,width:descrW}),
         cell(para([run("Antecedent / context",{bold:true,size:15,color:C.teal})]),{fill:C.light,width:antW}),
       ]}),
