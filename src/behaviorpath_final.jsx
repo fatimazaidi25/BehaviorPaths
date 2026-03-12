@@ -3904,6 +3904,74 @@ const SAME_KEY_MAP = {
   comms:     ["commsMethod","commsFreq","commsWho","commsIncident","commsNote"],
 };
 
+// ────────────────────────────────────────────────────────────
+// ── FeedbackWidget
+// ────────────────────────────────────────────────────────────
+
+function FeedbackWidget() {
+  const [open, setOpen] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  return (
+    <div style={{ position: "fixed", bottom: 20, right: 20, zIndex: 999, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 10 }}>
+
+      {/* Popout card */}
+      {open && (
+        <div style={{
+          background: B.white, borderRadius: 14, border: `1.5px solid ${B.border}`,
+          boxShadow: "0 8px 32px rgba(0,59,1,0.15)", padding: "20px 22px",
+          width: 280, fontFamily: "'DM Sans',sans-serif",
+          animation: "fadeSlideUp 0.2s ease",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: B.forest }}>We'd love your feedback 🌱</div>
+            <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", color: B.muted, fontSize: 18, lineHeight: 1, padding: 0, marginLeft: 8 }}>×</button>
+          </div>
+          <p style={{ fontSize: 12.5, color: B.muted, lineHeight: 1.7, marginBottom: 14 }}>
+            Help us improve BehaviorPath — share what's working, what's missing, or what you'd love to see next.
+          </p>
+          <a
+            href="https://forms.gle/8cfGMxqkqURcPbGJ8"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => { if(window.trackEvent) window.trackEvent("feedback_form_opened"); }}
+            style={{
+              display: "block", textAlign: "center", padding: "10px 16px",
+              background: B.forest, color: B.white, borderRadius: 9,
+              fontWeight: 600, fontSize: 13, textDecoration: "none",
+              fontFamily: "'DM Sans',sans-serif",
+            }}
+          >
+            Share Feedback →
+          </a>
+        </div>
+      )}
+
+      {/* Tab button */}
+      {!dismissed && (
+        <button
+          onClick={() => setOpen(o => !o)}
+          style={{
+            display: "flex", alignItems: "center", gap: 8,
+            padding: "10px 16px", borderRadius: 30,
+            background: open ? B.teal : B.forest,
+            color: B.white, border: "none", cursor: "pointer",
+            fontFamily: "'DM Sans',sans-serif", fontWeight: 600, fontSize: 13,
+            boxShadow: "0 4px 16px rgba(0,59,1,0.25)", transition: "background 0.2s",
+          }}
+        >
+          <span style={{ fontSize: 16 }}>💬</span>
+          {!open && "Share Feedback"}
+          {open && "Close"}
+        </button>
+      )}
+
+      <style>{`@keyframes fadeSlideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }`}</style>
+    </div>
+  );
+}
+
+
 // ── Root component ────────────────────────────────────────────────
 const LS_KEY = "behaviorpath_draft";
 
@@ -4118,6 +4186,9 @@ function BehaviorPath() {
             </div>
           </div>
         </div>
+
+        {/* Feedback widget */}
+        <FeedbackWidget />
 
       </div>
     </>
