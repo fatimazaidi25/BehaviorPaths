@@ -6,6 +6,21 @@
   <title>BehaviorPath — BASIL Behavior Lab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1CWEWKJR6S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1CWEWKJR6S');
+
+    // Helper for custom events — called from the React app
+    window.trackEvent = function(eventName, params) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, params || {});
+      }
+    };
+  </script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:#FDFAF5;font-family:'DM Sans',sans-serif}
