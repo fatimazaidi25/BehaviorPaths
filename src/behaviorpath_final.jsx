@@ -26,6 +26,42 @@ const B = {
 
 
 // ────────────────────────────────────────────────────────────
+// ── data sheet PDF URLs (hosted in public GitHub repo)
+// ────────────────────────────────────────────────────────────
+
+const DATA_SHEETS = {
+  abc:      { label: "ABC Data Sheet",                  file: "BehaviorPath_ABC_Data_sheet.pdf" },
+  ea:       { label: "Environmental Analysis (EA)",     file: "BehaviorPath_EA_Data_Sheet.pdf" },
+  baseline: { label: "Baseline Data Sheet",             file: "BehaviorPath_Baseline_Data_Sheet.pdf" },
+  fidelity: { label: "BIP Fidelity Checklist",          file: "BehaviorPath_Fidelity_Checklist.pdf" },
+};
+
+// Base URL — PDFs live in the /data-sheets folder of the public GitHub repo
+const DATA_SHEET_BASE = "https://raw.githubusercontent.com/fatimazaidi25/behaviorpath-tools/main/data-sheets/";
+
+const DataSheetLink = ({ sheetKey, label, style: extStyle }) => {
+  const sheet = DATA_SHEETS[sheetKey];
+  const url = DATA_SHEET_BASE + sheet.file;
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 5,
+        fontSize: 12, fontWeight: 600, color: B.teal,
+        fontFamily: "'DM Sans',sans-serif",
+        textDecoration: "none", borderBottom: `1px dashed ${B.sage}`,
+        ...extStyle,
+      }}
+    >
+      📄 {label || sheet.label}
+    </a>
+  );
+};
+
+
+// ────────────────────────────────────────────────────────────
 // ── constants
 // ────────────────────────────────────────────────────────────
 
@@ -777,7 +813,7 @@ function buildOutput(d) {
   const q     = (label) => `\n${label}`;
   const a     = (text)  => text || "[Not completed]";
   const bLabel = (bk)   => multi ? (bk==="b1" ? "  [Behavior 1]" : "  [Behavior 2]") : "";
-  const bullets = (arr) => (arr||[]).length ? (arr).map((x,i) => `  ${i+1}. ${x}`).join("\n") : "  [Not completed]";
+  const bullets = (arr) => (arr||[]).length ? (arr).map(x => `  • ${x}`).join("\n") : "  [Not completed]";
   const FN_LABELS = { escape:"Escape / Avoidance", attention:"Attention (adult or peer)",
     tangible:"Access to tangible / preferred item", sensory:"Automatic / Sensory", unknown:"Unknown" };
 
@@ -819,11 +855,11 @@ function buildOutput(d) {
   // ── SECTION 3 ────────────────────────────────────────────
   lines.push("");
   lines.push(div);
-  lines.push("SECTION 3 — Need for a Behavior Intervention Plan");
+  lines.push("SECTION 3 — Environmental Analysis");
   lines.push(line);
-  const levelLabels = { "early stage": "Early Stage Intervention", "moderate": "Moderate", "serious": "Serious", "extreme": "Extreme" };
-  lines.push(q("BIP Level:"));
-  lines.push(`  ${levelLabels[d.level] || a(d.level)}`);
+  lines.push(q("Note:"));
+  lines.push("  Refer to the Environmental Analysis Data Sheet completed separately.");
+  lines.push("  Results inform Sections 6 & 7 of this BIP.");
 
   // ── SECTION 4 ────────────────────────────────────────────
   lines.push("");
@@ -866,8 +902,8 @@ function buildOutput(d) {
     if (multi) lines.push(bLabel(key));
     lines.push(q("Environmental modifications needed:"));
     if ((b.envSel||[]).length) {
-      b.envSel.forEach((item, i) => {
-        lines.push(`  ${i+1}. ${item}`);
+      b.envSel.forEach(item => {
+        lines.push(`  • ${item}`);
         const note = (b.envS7||{})[item];
         if (note) lines.push(`    → ${note}`);
       });
@@ -886,10 +922,10 @@ function buildOutput(d) {
     if (multi) lines.push(bLabel(key));
     lines.push(q("Function(s):"));
     const fns = (b.fns||[]).map(f => FN_LABELS[f]||f);
-    lines.push(fns.length ? fns.map((f,i)=>`  ${i+1}. ${f}`).join("\n") : "  [Not completed]");
+    lines.push(fns.length ? fns.map(f=>`  • ${f}`).join("\n") : "  [Not completed]");
     if ((b.fnFrames||[]).length) {
       lines.push(q("Evidence / how we know:"));
-      lines.push(b.fnFrames.map((f,i)=>`  ${i+1}. ${f}`).join("\n"));
+      lines.push(b.fnFrames.map(f=>`  • ${f}`).join("\n"));
     }
     if (multi) lines.push("");
   });
@@ -945,7 +981,7 @@ function buildOutput(d) {
 
     lines.push(q("Reinforcers:"));
     const reinf = [...(b.reinf||[]),...(b.reinfItems||[])];
-    lines.push(reinf.length ? reinf.map((r,i)=>`  ${i+1}. ${r}`).join("\n") : "  [Not completed]");
+    lines.push(reinf.length ? reinf.map(r=>`  • ${r}`).join("\n") : "  [Not completed]");
     if ((b.reinfCustom||"").trim()) { lines.push(q("Additional reinforcers:")); lines.push(`  ${b.reinfCustom}`); }
     if ((b.reinfSchedule||[]).length) { lines.push(q("Delivery schedule:")); lines.push(bullets(b.reinfSchedule)); }
     if (b.reinfBasis) { lines.push(q("How reinforcer was identified:")); lines.push(`  ${b.reinfBasis}`); }
@@ -996,7 +1032,7 @@ function buildOutput(d) {
       const items = rx[ph.k]||[];
       if (!items.length) return;
       lines.push(q(ph.label+":"));
-      lines.push(items.map((i,idx)=>`  ${idx+1}. ${i}`).join("\n"));
+      lines.push(items.map(i=>`  • ${i}`).join("\n"));
     });
     if (rx.roomEvac) {
       lines.push(q("Room evacuation:"));
@@ -1005,7 +1041,7 @@ function buildOutput(d) {
     if (rx.p5RecoveryTime) { lines.push(q("Typical recovery time:")); lines.push(`  ${rx.p5RecoveryTime}`); }
     if (rx.p5Debrief)      { lines.push(q("Debrief procedure:")); lines.push(`  ${rx.p5Debrief}`); }
     const post = [rx.p5Document&&"Document using ABC Data Sheet", rx.p5Admin&&"Notify administrator", rx.p5Family&&"Contact family", rx.p5TeamDebrief&&"Team debrief"].filter(Boolean);
-    if (post.length) { lines.push(q("Post-incident procedures:")); lines.push(post.map((p,i)=>`  ${i+1}. ${p}`).join("\n")); }
+    if (post.length) { lines.push(q("Post-incident procedures:")); lines.push(post.map(p=>`  • ${p}`).join("\n")); }
 
     if (multi) lines.push("");
   });
@@ -1080,11 +1116,50 @@ function WelcomeScreen({ go, mode, setMode }) {
 
       <div style={{ background: B.mint + "66", borderRadius: 12, padding: "16px 20px", marginBottom: 20, textAlign: "center" }}>
         <p style={{ fontSize: 14, color: B.teal, lineHeight: 1.8, fontFamily: "'DM Sans',sans-serif", margin: 0 }}>
-          A guided, step-by-step path to building individualized, evidence-based Behavior Intervention Plans — one question at a time.
+          A guided, step-by-step path to building individualized, evidence-based Behavior Intervention Plans — aligned to <strong>SIRAS IEP Form 6G</strong>. Save your answers with the backup button and pick up where you left off with restore.
         </p>
       </div>
 
-      <Box type="info">This plan follows the structure of the <strong>SIRAS IEP Form 6G</strong> — Behavior Intervention Plan. Your answers are saved as you walk the path.</Box>
+      {/* Data Collection Tools */}
+      <div style={{ background: B.cream, border: `1px solid ${B.border}`, borderRadius: 12, padding: "16px 20px", marginBottom: 20 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", color: B.teal, fontFamily: "'DM Sans',sans-serif", marginBottom: 10 }}>
+          📋 Data Collection Tools
+        </div>
+        <p style={{ fontSize: 12.5, color: B.muted, fontFamily: "'DM Sans',sans-serif", marginBottom: 12, lineHeight: 1.6 }}>
+          Download these companion sheets before you begin. You'll need baseline data, ABC observations, and an environmental analysis to complete the plan.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[
+            { key: "baseline", desc: "Sections 4 & 13 — frequency / duration data" },
+            { key: "abc",      desc: "Sections 5 & 8 — antecedents, consequences, and function" },
+            { key: "ea",       desc: "Sections 6–7 — environmental analysis" },
+            { key: "fidelity", desc: "Section 11 — BIP implementation fidelity" },
+          ].map(({ key, desc }) => (
+            <a
+              key={key}
+              href={DATA_SHEET_BASE + DATA_SHEETS[key].file}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                padding: "10px 14px", borderRadius: 9,
+                background: B.white, border: `1.5px solid ${B.border}`,
+                textDecoration: "none", transition: "border-color 0.15s",
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: B.forest, fontFamily: "'DM Sans',sans-serif" }}>
+                  {DATA_SHEETS[key].label}
+                </div>
+                <div style={{ fontSize: 11, color: B.muted, fontFamily: "'DM Sans',sans-serif", marginTop: 1 }}>{desc}</div>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 600, color: B.teal, fontFamily: "'DM Sans',sans-serif", background: B.mint, borderRadius: 6, padding: "3px 9px" }}>
+                PDF ↓
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
 
       <div style={{ textAlign: "center" }}>
         <button
@@ -1093,6 +1168,11 @@ function WelcomeScreen({ go, mode, setMode }) {
         >
           Begin the Path →
         </button>
+      </div>
+
+      <div style={{ marginTop: 24, textAlign: "center", fontSize: 11, color: B.muted, fontFamily: "'DM Sans',sans-serif", lineHeight: 1.7 }}>
+        <div style={{ marginBottom: 4 }}>BehaviorPath · BASIL Behavior Lab · basilbehaviorlab.org</div>
+        <div>🔒 Your data never leaves your device. No student information is stored or transmitted.</div>
       </div>
     </div>
   );
@@ -1339,6 +1419,7 @@ function renderBaseline({ d, updB, setSame, sec, hasTwoBehaviors, activeBkeys, N
       <div style={{marginBottom:14,color:B.forest}}><BarChart2 size={38} strokeWidth={1.5}/></div>
       <H>Frequency or intensity or duration of behavior</H>
       <P>Your baseline "before" snapshot. Use specific numbers — avoid "often" or "throughout the day."</P>
+      <Box type="info">📋 <strong>Need a data sheet?</strong> Use the <DataSheetLink sheetKey="baseline" /> to record frequency or duration data across 5–10 school days before completing this section.</Box>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
       <Nav ok={activeBkeys.every(bk=>[(d[bk].freqMin||d[bk].freqMax),d[bk].intensity,(d[bk].durMin||d[bk].durMax)].filter(Boolean).length>=2)}/>
@@ -1381,7 +1462,7 @@ function renderAntecedents({ d, updB, togB, setSame, sec, hasTwoBehaviors, activ
       <div style={{marginBottom:14,color:B.forest}}><Search size={38} strokeWidth={1.5}/></div>
       <H>What are the predictors for the behavior?</H>
       <P>Situations in which the behavior is likely to occur: people, time, place, subject, activity.</P>
-      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — antecedent numbers on the sheet correspond to the predictors below.</Box>
+      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — antecedent numbers on the sheet correspond to the predictors below. <DataSheetLink sheetKey="abc" label="Download ABC Data Sheet" style={{ marginLeft: 6 }} /></Box>
       <p style={{fontSize:15,fontStyle:"italic",fontFamily:"'Cormorant Garamond',serif",color:B.teal,marginBottom:14}}>The behavior is most likely to occur when…</p>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
@@ -1473,7 +1554,7 @@ function renderEnvironment({ d, updB, setSame, setD, sec, hasTwoBehaviors, activ
       <div style={{marginBottom:14,color:B.forest}}><Home size={38} strokeWidth={1.5}/></div>
       <H>What supports the student using the problem behavior?</H>
       <P>Use your EA Data Sheet — select items marked Δ or − for each behavior. Max 2 per behavior.</P>
-      <Box type="info">📋 <strong>Reference your EA Data Sheet</strong> — items marked Δ (needs change) or − (missing) are your targets.</Box>
+      <Box type="info">📋 <strong>Reference your EA Data Sheet</strong> — items marked Δ (needs change) or − (missing) are your targets. <DataSheetLink sheetKey="ea" label="Download EA Data Sheet" style={{ marginLeft: 6 }} /></Box>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
       <Nav ok={activeBkeys.every(bk=>(d[bk].envSel||[]).length>=1)}/>
@@ -1693,7 +1774,7 @@ function renderFunction({ d, togB, updB, setSame, sec, hasTwoBehaviors, activeBk
       <div style={{marginBottom:14,color:B.forest}}><Brain size={38} strokeWidth={1.5}/></div>
       <H>Function of behavior</H>
       <P>The function is what the student gets or avoids. Use your ABC data to identify the most likely function below.</P>
-      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — use your most common A numbers and C codes in the calculator below.</Box>
+      <Box type="info">📋 <strong>Reference your ABC Data Sheet</strong> — use your most common A numbers and C codes in the calculator below. <DataSheetLink sheetKey="abc" label="Download ABC Data Sheet" style={{ marginLeft: 6 }} /></Box>
       {renderBlock("b1", d.beh1type)}
       {hasTwoBehaviors && renderBlock("b2", d.beh2type)}
       <Nav ok={activeBkeys.every(bk=>(d[bk].fns||[]).length>0&&(d[bk].fnFrames||[]).length>0)}/>
@@ -3706,6 +3787,7 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
     setDlError(null);
     try {
       await downloadBIPDocx(d);
+      if(window.trackEvent) window.trackEvent("bip_downloaded", { student_level: d.level });
     } catch(e) {
       console.error(e);
       setDlError("Download failed — try again or use the text copy below.");
@@ -3755,7 +3837,7 @@ function RenderOutput({ d, go, dl, mode, setMode }) {
               display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:0.85}}>
             🗂️ Data Sheet Maker <span style={{fontSize:10,fontWeight:500,background:B.mint,color:B.teal,borderRadius:100,padding:"2px 8px",marginLeft:4}}>Coming Soon</span>
           </button>
-          <button onClick={()=>downloadFidelitySheet(d)}
+          <button onClick={()=>{ downloadFidelitySheet(d); if(window.trackEvent) window.trackEvent("fidelity_checklist_downloaded", { student_level: d.level }); }}
             style={{width:"100%",padding:"11px 14px",borderRadius:9,border:`1.5px solid ${B.forest}`,cursor:"pointer",
               background:"#fff",color:B.forest,fontWeight:600,fontSize:12.5,fontFamily:"'DM Sans',sans-serif",
               display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .15s"}}>
@@ -3823,6 +3905,74 @@ const SAME_KEY_MAP = {
   goals:     ["ferbGoal","redGoal"],
   comms:     ["commsMethod","commsFreq","commsWho","commsIncident","commsNote"],
 };
+
+// ────────────────────────────────────────────────────────────
+// ── FeedbackWidget
+// ────────────────────────────────────────────────────────────
+
+function FeedbackWidget() {
+  const [open, setOpen] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  return (
+    <div style={{ position: "fixed", bottom: 20, right: 20, zIndex: 999, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 10 }}>
+
+      {/* Popout card */}
+      {open && (
+        <div style={{
+          background: B.white, borderRadius: 14, border: `1.5px solid ${B.border}`,
+          boxShadow: "0 8px 32px rgba(0,59,1,0.15)", padding: "20px 22px",
+          width: 280, fontFamily: "'DM Sans',sans-serif",
+          animation: "fadeSlideUp 0.2s ease",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: B.forest }}>We'd love your feedback 🌱</div>
+            <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", color: B.muted, fontSize: 18, lineHeight: 1, padding: 0, marginLeft: 8 }}>×</button>
+          </div>
+          <p style={{ fontSize: 12.5, color: B.muted, lineHeight: 1.7, marginBottom: 14 }}>
+            Help us improve BehaviorPath — share what's working, what's missing, or what you'd love to see next.
+          </p>
+          <a
+            href="https://forms.gle/8cfGMxqkqURcPbGJ8"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => { if(window.trackEvent) window.trackEvent("feedback_form_opened"); }}
+            style={{
+              display: "block", textAlign: "center", padding: "10px 16px",
+              background: B.forest, color: B.white, borderRadius: 9,
+              fontWeight: 600, fontSize: 13, textDecoration: "none",
+              fontFamily: "'DM Sans',sans-serif",
+            }}
+          >
+            Share Feedback →
+          </a>
+        </div>
+      )}
+
+      {/* Tab button */}
+      {!dismissed && (
+        <button
+          onClick={() => setOpen(o => !o)}
+          style={{
+            display: "flex", alignItems: "center", gap: 8,
+            padding: "10px 16px", borderRadius: 30,
+            background: open ? B.teal : B.forest,
+            color: B.white, border: "none", cursor: "pointer",
+            fontFamily: "'DM Sans',sans-serif", fontWeight: 600, fontSize: 13,
+            boxShadow: "0 4px 16px rgba(0,59,1,0.25)", transition: "background 0.2s",
+          }}
+        >
+          <span style={{ fontSize: 16 }}>💬</span>
+          {!open && "Share Feedback"}
+          {open && "Close"}
+        </button>
+      )}
+
+      <style>{`@keyframes fadeSlideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }`}</style>
+    </div>
+  );
+}
+
 
 // ── Root component ────────────────────────────────────────────────
 const LS_KEY = "behaviorpath_draft";
@@ -3945,7 +4095,7 @@ function BehaviorPath() {
     window.scrollTo({top:0,behavior:"instant"});
     scrollRef.current?.scrollTo({top:0,behavior:"instant"});
   }, 10);
-  const go   = dir => { setAnim(false); setTimeout(()=>{setSi(i=>Math.max(0,Math.min(STOPS.length-1,i+dir)));setAnim(true);scrollTop();},140); };
+  const go   = dir => { setAnim(false); setTimeout(()=>{setSi(i=>{ const next=Math.max(0,Math.min(STOPS.length-1,i+dir)); if(window.trackEvent) window.trackEvent("section_view",{section_id:STOPS[next].id,section_label:STOPS[next].label}); return next; });setAnim(true);scrollTop();},140); };
   const jump = i   => { setAnim(false); setTimeout(()=>{setSi(i);setAnim(true);scrollTop();},100); };
   const dl   = ()  => { const a=document.createElement("a"); a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(buildOutput(d)); a.download=`BehaviorPath_BIP_${d.name||"Student"}.txt`; a.click(); };
 
@@ -4038,6 +4188,9 @@ function BehaviorPath() {
             </div>
           </div>
         </div>
+
+        {/* Feedback widget */}
+        <FeedbackWidget />
 
       </div>
     </>
